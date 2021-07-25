@@ -1,1 +1,1 @@
-'# Secure Hash Algorithm Module by lschu' 
+# Secure Hash Algorithm Module by lschu
