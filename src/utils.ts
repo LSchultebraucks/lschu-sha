@@ -13,3 +13,13 @@ export const appendSingle1 = (word: string): string => {
 export const padWithZerosToDiv512 = (word: string): string => {
   return word.padEnd(512, '0');
 };
+
+export const preprocess = (message: string): string => {
+    message = to8BitString(message);
+    const messageLength = message.length;
+    message = appendSingle1(message);
+    const zerosToAdd = 512 - ((messageLength + 1 + 64) % 512);
+    message += "0".repeat(zerosToAdd);
+    message += messageLength.toString(2).padStart(64, '0');
+    return message;
+};

@@ -1,3 +1,5 @@
+import {preprocess} from "../src/utils";
+
 export const HelloWorld = () => 'Hello World';
 
 const h0 = 0x6a09e667;
@@ -20,6 +22,7 @@ const k = [
   0xc67178f2,
 ];
 
-export const sha256 = (message: string) => {
+export const sha256 = (message: string): string => {
+  const preprocessedMessage = preprocess(message);
   return '';
 };
