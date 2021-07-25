@@ -1,6 +1,4 @@
-import {preprocess} from "../src/utils";
-
-export const HelloWorld = () => 'Hello World';
+import { preprocess } from '../src/utils';
 
 const h0 = 0x6a09e667;
 const h1 = 0xbb67ae85;
@@ -24,5 +22,24 @@ const k = [
 
 export const sha256 = (message: string): string => {
   const preprocessedMessage = preprocess(message);
+  const messageChunks = chunkMessage(preprocessedMessage, 512);
+  messageChunks.forEach((chunk) => {
+    // TODO init arrays
+
+    for (let i = 0; i < 63; i++) {
+      //
+    }
+  });
   return '';
+};
+
+const chunkMessage = (message: string, chunkSize: number) => {
+  const numChunks = Math.ceil(message.length / chunkSize);
+  const chunks = new Array(numChunks);
+
+  for (let i = 0, o = 0; i < numChunks; ++i, o += chunkSize) {
+    chunks[i] = message.substr(o, chunkSize);
+  }
+
+  return chunks;
 };

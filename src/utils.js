@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.preprocess = exports.padWithZerosToDiv512 = exports.appendSingle1 = exports.to8BitString = void 0;
+exports.rightShiftWithLeadingZeros = exports.rightRotate = exports.preprocess = void 0;
 var to8BitString = function (word) {
     var binaryString = '';
     Array.from(word).forEach(function (c) {
@@ -8,21 +8,27 @@ var to8BitString = function (word) {
     });
     return binaryString;
 };
-exports.to8BitString = to8BitString;
 var appendSingle1 = function (word) {
     return word + '1';
 };
-exports.appendSingle1 = appendSingle1;
-var padWithZerosToDiv512 = function (word) {
-    return word.padEnd(512, '0');
-};
-exports.padWithZerosToDiv512 = padWithZerosToDiv512;
 var preprocess = function (message) {
+    message = to8BitString(message);
     var messageLength = message.length;
-    message = exports.appendSingle1(message);
-    var zerosToAdd = 512 - (messageLength + 1 + 64 % 512);
-    message += "0".repeat(zerosToAdd);
+    message = appendSingle1(message);
+    var zerosToAdd = 512 - ((messageLength + 1 + 64) % 512);
+    message += '0'.repeat(zerosToAdd);
     message += messageLength.toString(2).padStart(64, '0');
     return message;
 };
 exports.preprocess = preprocess;
+var leftRotate = function (word, d) {
+    return word.substring(d, word.length) + word.substring(0, d);
+};
+var rightRotate = function (word, d) {
+    return leftRotate(word, word.length - d);
+};
+exports.rightRotate = rightRotate;
+var rightShiftWithLeadingZeros = function (word, d) {
+    return '0'.repeat(d) + word.substring(0, word.length - d);
+};
+exports.rightShiftWithLeadingZeros = rightShiftWithLeadingZeros;

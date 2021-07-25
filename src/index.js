@@ -1,9 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sha256 = exports.HelloWorld = void 0;
+exports.sha256 = void 0;
 var utils_1 = require("../src/utils");
-var HelloWorld = function () { return 'Hello World'; };
-exports.HelloWorld = HelloWorld;
 var h0 = 0x6a09e667;
 var h1 = 0xbb67ae85;
 var h2 = 0x3c6ef372;
@@ -24,6 +22,21 @@ var k = [
 ];
 var sha256 = function (message) {
     var preprocessedMessage = utils_1.preprocess(message);
+    var messageChunks = chunkMessage(preprocessedMessage, 512);
+    messageChunks.forEach(function (chunk) {
+        // TODO init arrays
+        for (var i = 0; i < 63; i++) {
+            //
+        }
+    });
     return '';
 };
 exports.sha256 = sha256;
+var chunkMessage = function (message, chunkSize) {
+    var numChunks = Math.ceil(message.length / chunkSize);
+    var chunks = new Array(numChunks);
+    for (var i = 0, o = 0; i < numChunks; ++i, o += chunkSize) {
+        chunks[i] = message.substr(o, chunkSize);
+    }
+    return chunks;
+};
