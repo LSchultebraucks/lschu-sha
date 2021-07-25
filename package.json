@@ -2,19 +2,44 @@
   "name": "lschu-sha",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --config jestconfig.json",
+    "build": "tsc",
+    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+    "lint": "tslint -p tsconfig.json",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm test && npm run lint",
+    "preversion": "npm run lint",
+    "version": "npm run format && git add -A src",
+    "postversion": "git push && git push --tags"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/LSchultebraucks/lschu-sha.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "SHA-2",
+    "SHA-256",
+    "Hashing"
+  ],
+  "author": "Lasse Schultebraucks",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/LSchultebraucks/lschu-sha/issues"
   },
-  "homepage": "https://github.com/LSchultebraucks/lschu-sha#readme"
+  "homepage": "https://github.com/LSchultebraucks/lschu-sha#readme",
+  "devDependencies": {
+    "@types/jest": "^26.0.24",
+    "jest": "^27.0.6",
+    "prettier": "^2.3.2",
+    "ts-jest": "^27.0.4",
+    "tslint": "^6.1.3",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^4.3.5"
+  },
+  "files": [
+    "lib/**/*"
+  ]
 }
