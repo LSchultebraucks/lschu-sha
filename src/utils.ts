@@ -5,3 +5,7 @@ export const to8BitString = (word: string): string => {
   });
   return binaryString;
 };
+
+export const appendSingle1 = (word: string): string => {
+    return word + "1";
+};
