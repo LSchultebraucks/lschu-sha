@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.rightShiftWithLeadingZeros = exports.rightRotate = exports.preprocess = void 0;
+exports.createMessageSchedule = exports.chunkString = exports.rightShiftWithLeadingZeros = exports.rightRotate = exports.preprocess = void 0;
 var to8BitString = function (word) {
     var binaryString = '';
     Array.from(word).forEach(function (c) {
@@ -32,3 +32,20 @@ var rightShiftWithLeadingZeros = function (word, d) {
     return '0'.repeat(d) + word.substring(0, word.length - d);
 };
 exports.rightShiftWithLeadingZeros = rightShiftWithLeadingZeros;
+var chunkString = function (str, chunkSize) {
+    var numChunks = Math.ceil(str.length / chunkSize);
+    var chunks = new Array(numChunks);
+    for (var i = 0, o = 0; i < numChunks; ++i, o += chunkSize) {
+        chunks[i] = str.substr(o, chunkSize);
+    }
+    return chunks;
+};
+exports.chunkString = chunkString;
+var createMessageSchedule = function (chunk) {
+    var messageSchedule = exports.chunkString(chunk, 32);
+    for (var i = 0; i < 48; i++) {
+        messageSchedule.push('00000000000000000000000000000000');
+    }
+    return messageSchedule;
+};
+exports.createMessageSchedule = createMessageSchedule;

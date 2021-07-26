@@ -1,4 +1,4 @@
-import { preprocess } from '../src/utils';
+import { preprocess, chunkString, createMessageSchedule } from '../src/utils';
 
 const h0 = 0x6a09e667;
 const h1 = 0xbb67ae85;
@@ -22,24 +22,25 @@ const k = [
 
 export const sha256 = (message: string): string => {
   const preprocessedMessage = preprocess(message);
-  const messageChunks = chunkMessage(preprocessedMessage, 512);
+  const messageChunks = chunkString(preprocessedMessage, 512);
   messageChunks.forEach((chunk) => {
-    // TODO init arrays
+    const wArr = createMessageSchedule(chunk);
+    
+
+    /*
+    let a = h0;
+    let b = h1;
+    let c = h2;
+    let d = h3;
+    let e = h4;
+    let f = h5;
+    let g = h6;
+    let h = h7;
+    */ 
 
     for (let i = 0; i < 63; i++) {
       //
     }
   });
   return '';
-};
-
-const chunkMessage = (message: string, chunkSize: number) => {
-  const numChunks = Math.ceil(message.length / chunkSize);
-  const chunks = new Array(numChunks);
-
-  for (let i = 0, o = 0; i < numChunks; ++i, o += chunkSize) {
-    chunks[i] = message.substr(o, chunkSize);
-  }
-
-  return chunks;
 };

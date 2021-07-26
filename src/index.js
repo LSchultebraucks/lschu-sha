@@ -22,9 +22,19 @@ var k = [
 ];
 var sha256 = function (message) {
     var preprocessedMessage = utils_1.preprocess(message);
-    var messageChunks = chunkMessage(preprocessedMessage, 512);
+    var messageChunks = utils_1.chunkString(preprocessedMessage, 512);
     messageChunks.forEach(function (chunk) {
-        // TODO init arrays
+        var wArr = utils_1.createMessageSchedule(chunk);
+        /*
+        let a = h0;
+        let b = h1;
+        let c = h2;
+        let d = h3;
+        let e = h4;
+        let f = h5;
+        let g = h6;
+        let h = h7;
+        */
         for (var i = 0; i < 63; i++) {
             //
         }
@@ -32,11 +42,3 @@ var sha256 = function (message) {
     return '';
 };
 exports.sha256 = sha256;
-var chunkMessage = function (message, chunkSize) {
-    var numChunks = Math.ceil(message.length / chunkSize);
-    var chunks = new Array(numChunks);
-    for (var i = 0, o = 0; i < numChunks; ++i, o += chunkSize) {
-        chunks[i] = message.substr(o, chunkSize);
-    }
-    return chunks;
-};
