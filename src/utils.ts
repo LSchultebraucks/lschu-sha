@@ -46,13 +46,35 @@ export const chunkString = (str: string, chunkSize: number) => {
 export const createMessageSchedule = (chunk: string): string[] => {
   const messageSchedule = chunkString(chunk, 32);
   for (let i = 0; i < 48; i++) {
-    messageSchedule.push('00000000000000000000000000000000')
+    messageSchedule.push('00000000000000000000000000000000');
   }
   return messageSchedule;
-}
+};
 
 export const xor = (a: string, b: string, bitSize: number): string => {
   // tslint:disable-next-line: no-bitwise
-  const resultDec = (parseInt(a, 2) ^ parseInt(b, 2));
+  const resultDec = parseInt(a, 2) ^ parseInt(b, 2);
   return resultDec.toString(2).padStart(bitSize, '0');
-}
+};
+
+export const add = (a: string, b: string, bitSize: number): string => {
+  const resultDec = (parseInt(a, 2) + parseInt(b, 2)) % Math.pow(2, bitSize);
+  return resultDec.toString(2).padStart(bitSize, '0');
+};
+
+export const and = (a: string, b: string, bitSize: number): string => {
+  // tslint:disable-next-line: no-bitwise
+  const resultDec = parseInt(a, 2) & parseInt(b, 2);
+  return resultDec.toString(2).padStart(bitSize, '0');
+};
+
+export const not = (a: string, bitSize: number): string => {
+  // tslint:disable-next-line: no-bitwise
+  const resultDec = replaceAll(replaceAll(replaceAll(replaceAll(a, '1', 'b'), '0', 'a'), 'a', '1'), 'b', '0');
+  return resultDec.padStart(bitSize, '0');
+};
+
+const replaceAll = (str: string, find: string, replace: string): string => {
+  const escapedFind = find.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1');
+  return str.replace(new RegExp(escapedFind, 'g'), replace);
+};

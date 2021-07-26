@@ -1,15 +1,23 @@
-import { preprocess, chunkString, createMessageSchedule } from '../src/utils';
+import {
+  preprocess,
+  chunkString,
+  createMessageSchedule,
+  rightRotate,
+  xor,
+  rightShiftWithLeadingZeros,
+  add,
+} from '../src/utils';
 
-const h0 = 0x6a09e667;
-const h1 = 0xbb67ae85;
-const h2 = 0x3c6ef372;
-const h3 = 0xa54ff53a;
-const h4 = 0x510e527f;
-const h5 = 0x9b05688c;
-const h6 = 0x1f83d9ab;
-const h7 = 0x5be0cd19;
+const INITIAL_H0 = 0x6a09e667;
+const INITIAL_H1 = 0xbb67ae85;
+const INITIAL_H2 = 0x3c6ef372;
+const INITIAL_H3 = 0xa54ff53a;
+const INITIAL_H4 = 0x510e527f;
+const INITIAL_H5 = 0x9b05688c;
+const INITIAL_H6 = 0x1f83d9ab;
+const INITIAL_H7 = 0x5be0cd19;
 
-const k = [
+const INITIAL_K = [
   0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5, 0xd807aa98,
   0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174, 0xe49b69c1, 0xefbe4786,
   0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da, 0x983e5152, 0xa831c66d, 0xb00327c8,
@@ -21,25 +29,46 @@ const k = [
 ];
 
 export const sha256 = (message: string): string => {
+  /*
+  let h0 = INITIAL_H0.toString(16);
+  let h1 = INITIAL_H1.toString(16);
+  let h2 = INITIAL_H2.toString(16);
+  let h3 = INITIAL_H3.toString(16);
+  let h4 = INITIAL_H4.toString(16);
+  let h5 = INITIAL_H5.toString(16);
+  let h6 = INITIAL_H6.toString(16);
+  let h7 = INITIAL_H7.toString(16);
+  */
+  const bitSize = 32;
   const preprocessedMessage = preprocess(message);
   const messageChunks = chunkString(preprocessedMessage, 512);
   messageChunks.forEach((chunk) => {
     const wArr = createMessageSchedule(chunk);
-    
-
+    for (let i = 16; i < 64; i++) {
+      const s0 = xor(
+        xor(rightRotate(wArr[i - 15], 7), rightRotate(wArr[i - 15], 18), bitSize),
+        rightShiftWithLeadingZeros(wArr[i - 15], 3),
+        bitSize,
+      );
+      const s1 = xor(
+        xor(rightRotate(wArr[i - 2], 17), rightRotate(wArr[i - 2], 19), bitSize),
+        rightShiftWithLeadingZeros(wArr[i - 2], 10),
+        bitSize,
+      );
+      wArr[i] = add(add(add(wArr[i - 16], s0, bitSize), wArr[i - 7], bitSize), s1, bitSize);
+    }
     /*
-    let a = h0;
-    let b = h1;
-    let c = h2;
-    let d = h3;
-    let e = h4;
-    let f = h5;
-    let g = h6;
+    let a = h1;
+    let b = h2;
+    let c = h3;
+    let d = h4;
+    let e = h5;
+    let f = h6;
+    let g = h7;
     let h = h7;
-    */ 
-
-    for (let i = 0; i < 63; i++) {
-      //
+    */
+    for (let i = 0; i < 64; i++) {
+      // const S1 = xor(xor(rightRotate(e, 6), rightRotate(e, 11), bitSize), rightRotate(e, 25), bitSize);
     }
   });
   return '';

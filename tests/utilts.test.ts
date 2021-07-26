@@ -1,4 +1,4 @@
-import {chunkString, createMessageSchedule, preprocess, rightRotate, rightShiftWithLeadingZeros, xor} from '../src/utils';
+import { chunkString, createMessageSchedule, preprocess, rightRotate, rightShiftWithLeadingZeros, xor, add, and, not } from '../src/utils';
 
 test('preprocess - single chunk length word', () => {
     const message = 'hello world';
@@ -55,7 +55,7 @@ test('chunkString - multiple chunks', () => {
     expect(actualChunks.length).toEqual(actualChunks.length);
     expect(actualChunks[0]).toEqual(actualChunks[0]);
     expect(actualChunks[1]).toEqual(actualChunks[1]);
-})
+});
 
 test('chunkString - singleChunk', () => {
     const str = '11110000';
@@ -63,7 +63,7 @@ test('chunkString - singleChunk', () => {
     const actualChunks = chunkString(str, 8);
     expect(actualChunks.length).toEqual(actualChunks.length);
     expect(actualChunks[0]).toEqual(actualChunks[0]);
-})
+});
 
 test('chunkString - singleChunk tiny string', () => {
     const str = '11';
@@ -71,7 +71,7 @@ test('chunkString - singleChunk tiny string', () => {
     const actualChunks = chunkString(str, 8);
     expect(actualChunks.length).toEqual(actualChunks.length);
     expect(actualChunks[0]).toEqual(actualChunks[0]);
-})
+});
 
 test('chunkString - singleChunk empty string', () => {
     const str = '';
@@ -79,7 +79,7 @@ test('chunkString - singleChunk empty string', () => {
     const actualChunks = chunkString(str, 8);
     expect(actualChunks.length).toEqual(actualChunks.length);
     expect(actualChunks[0]).toEqual(actualChunks[0]);
-})
+});
 
 
 test('messageSchedule', () => {
@@ -155,7 +155,7 @@ test('messageSchedule', () => {
     actualMessageSchedule.forEach((item, i) => {
         expect(item).toEqual(expectedMessageSchedule[i]);
     });
-})
+});
 
 test('xor - 8 bit words', () => {
     const a = '10011001';
@@ -163,7 +163,7 @@ test('xor - 8 bit words', () => {
     const bizSize = 8;
     const expectedWord = '00110011';
     expect(xor(a, b, bizSize)).toEqual(expectedWord);
-})
+});
 
 test('xor - 8 bit and 6 bit words', () => {
     const a = '10011001';
@@ -171,7 +171,7 @@ test('xor - 8 bit and 6 bit words', () => {
     const bizSize = 8;
     const expectedWord = '00110011';
     expect(xor(a, b, bizSize)).toEqual(expectedWord);
-})
+});
 
 test('xor - 8 bit words', () => {
     const a = '10011001';
@@ -179,7 +179,7 @@ test('xor - 8 bit words', () => {
     const bizSize = 8;
     const expectedWord = '10110011';
     expect(xor(a, b, bizSize)).toEqual(expectedWord);
-})
+});
 
 test('xor - 6 bit and 8 bit words', () => {
     const a = '101010';
@@ -187,4 +187,81 @@ test('xor - 6 bit and 8 bit words', () => {
     const bizSize = 8;
     const expectedWord = '10110011';
     expect(xor(a, b, bizSize)).toEqual(expectedWord);
-})
+});
+
+test('add - 8 bit words', () => {
+    const a = '01001000';
+    const b = '01001000';
+    const bitSize = 8;
+    const expectedWord = '10010000';
+    expect(add(a, b, bitSize)).toEqual(expectedWord);
+});
+
+test('add - 8 bit and 6 bit words', () => {
+    const a = '01001000';
+    const b = '001000';
+    const bitSize = 8;
+    const expectedWord = '01010000';
+    expect(add(a, b, bitSize)).toEqual(expectedWord);
+});
+
+test('add - 8 bit words with overflow and modulo operation used', () => {
+    const a = '11111110';
+    const b = '00000011';
+    const bitSize = 8;
+    const expectedWord = '00000001';
+    expect(add(a, b, bitSize)).toEqual(expectedWord);
+});
+
+test('add - 8 bit words with overflow and modulo operation used', () => {
+    const a = '11111111';
+    const b = '11111111';
+    const bitSize = 8;
+    const expectedWord = '11111110';
+    expect(add(a, b, bitSize)).toEqual(expectedWord);
+});
+
+test('and - 8 bit words', () => {
+    const a = '10001000';
+    const b = '11110000';
+    const bitSize = 8;
+    const expectedWord = '10000000';
+    expect(and(a, b, bitSize)).toEqual(expectedWord);
+});
+
+test('and - 8 bit words', () => {
+    const a = '01010101';
+    const b = '10101010';
+    const bitSize = 8;
+    const expectedWord = '00000000';
+    expect(and(a, b, bitSize)).toEqual(expectedWord);
+});
+
+test('and - 8 bit and 6 bit words', () => {
+    const a = '10001010';
+    const b = '110010';
+    const bitSize = 8;
+    const expectedWord = '00000010';
+    expect(and(a, b, bitSize)).toEqual(expectedWord);
+});
+
+test('not - 8 bit word', () => {
+    const a = '01100011';
+    const bitSize = 8;
+    const expectedWord = '10011100';
+    expect(not(a, bitSize)).toEqual(expectedWord);
+});
+
+test('not - 8 bit word', () => {
+    const a = '00000000';
+    const bitSize = 8;
+    const expectedWord = '11111111';
+    expect(not(a, bitSize)).toEqual(expectedWord);
+});
+
+test('not - 8 bit word', () => {
+    const a = '11111111';
+    const bitSize = 8;
+    const expectedWord = '00000000';
+    expect(not(a, bitSize)).toEqual(expectedWord);
+});

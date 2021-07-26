@@ -4,3 +4,6 @@ export declare const rightShiftWithLeadingZeros: (word: string, d: number) => st
 export declare const chunkString: (str: string, chunkSize: number) => any[];
 export declare const createMessageSchedule: (chunk: string) => string[];
 export declare const xor: (a: string, b: string, bitSize: number) => string;
+export declare const add: (a: string, b: string, bitSize: number) => string;
+export declare const and: (a: string, b: string, bitSize: number) => string;
+export declare const not: (a: string, bitSize: number) => string;

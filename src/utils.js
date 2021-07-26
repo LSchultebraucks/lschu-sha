@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.xor = exports.createMessageSchedule = exports.chunkString = exports.rightShiftWithLeadingZeros = exports.rightRotate = exports.preprocess = void 0;
+exports.not = exports.and = exports.add = exports.xor = exports.createMessageSchedule = exports.chunkString = exports.rightShiftWithLeadingZeros = exports.rightRotate = exports.preprocess = void 0;
 var toBitString = function (word, bitSize) {
     var binaryString = '';
     Array.from(word).forEach(function (c) {
@@ -51,7 +51,28 @@ var createMessageSchedule = function (chunk) {
 exports.createMessageSchedule = createMessageSchedule;
 var xor = function (a, b, bitSize) {
     // tslint:disable-next-line: no-bitwise
-    var resultDec = (parseInt(a, 2) ^ parseInt(b, 2));
+    var resultDec = parseInt(a, 2) ^ parseInt(b, 2);
     return resultDec.toString(2).padStart(bitSize, '0');
 };
 exports.xor = xor;
+var add = function (a, b, bitSize) {
+    var resultDec = (parseInt(a, 2) + parseInt(b, 2)) % Math.pow(2, bitSize);
+    return resultDec.toString(2).padStart(bitSize, '0');
+};
+exports.add = add;
+var and = function (a, b, bitSize) {
+    // tslint:disable-next-line: no-bitwise
+    var resultDec = parseInt(a, 2) & parseInt(b, 2);
+    return resultDec.toString(2).padStart(bitSize, '0');
+};
+exports.and = and;
+var not = function (a, bitSize) {
+    // tslint:disable-next-line: no-bitwise
+    var resultDec = replaceAll(replaceAll(replaceAll(replaceAll(a, '1', 'b'), '0', 'a'), 'a', '1'), 'b', '0');
+    return resultDec.padStart(bitSize, '0');
+};
+exports.not = not;
+var replaceAll = function (str, find, replace) {
+    var escapedFind = find.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1');
+    return str.replace(new RegExp(escapedFind, 'g'), replace);
+};
