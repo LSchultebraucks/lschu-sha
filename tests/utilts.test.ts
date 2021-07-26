@@ -1,4 +1,4 @@
-import {chunkString, createMessageSchedule, preprocess, rightRotate, rightShiftWithLeadingZeros} from '../src/utils';
+import {chunkString, createMessageSchedule, preprocess, rightRotate, rightShiftWithLeadingZeros, xor} from '../src/utils';
 
 test('preprocess - single chunk length word', () => {
     const message = 'hello world';
@@ -155,4 +155,36 @@ test('messageSchedule', () => {
     actualMessageSchedule.forEach((item, i) => {
         expect(item).toEqual(expectedMessageSchedule[i]);
     });
+})
+
+test('xor - 8 bit words', () => {
+    const a = '10011001';
+    const b = '10101010';
+    const bizSize = 8;
+    const expectedWord = '00110011';
+    expect(xor(a, b, bizSize)).toEqual(expectedWord);
+})
+
+test('xor - 8 bit and 6 bit words', () => {
+    const a = '10011001';
+    const b = '10101010';
+    const bizSize = 8;
+    const expectedWord = '00110011';
+    expect(xor(a, b, bizSize)).toEqual(expectedWord);
+})
+
+test('xor - 8 bit words', () => {
+    const a = '10011001';
+    const b = '101010';
+    const bizSize = 8;
+    const expectedWord = '10110011';
+    expect(xor(a, b, bizSize)).toEqual(expectedWord);
+})
+
+test('xor - 6 bit and 8 bit words', () => {
+    const a = '101010';
+    const b = '10011001';
+    const bizSize = 8;
+    const expectedWord = '10110011';
+    expect(xor(a, b, bizSize)).toEqual(expectedWord);
 })

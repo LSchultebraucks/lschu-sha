@@ -1,7 +1,7 @@
-const to8BitString = (word: string): string => {
+const toBitString = (word: string, bitSize: number): string => {
   let binaryString = '';
   Array.from(word).forEach((c: string) => {
-    binaryString += c.charCodeAt(0).toString(2).padStart(8, '0');
+    binaryString += c.charCodeAt(0).toString(2).padStart(bitSize, '0');
   });
   return binaryString;
 };
@@ -11,7 +11,7 @@ const appendSingle1 = (word: string): string => {
 };
 
 export const preprocess = (message: string): string => {
-  message = to8BitString(message);
+  message = toBitString(message, 8);
   const messageLength = message.length;
   message = appendSingle1(message);
   const zerosToAdd = 512 - ((messageLength + 1 + 64) % 512);
@@ -49,4 +49,10 @@ export const createMessageSchedule = (chunk: string): string[] => {
     messageSchedule.push('00000000000000000000000000000000')
   }
   return messageSchedule;
+}
+
+export const xor = (a: string, b: string, bitSize: number): string => {
+  // tslint:disable-next-line: no-bitwise
+  const resultDec = (parseInt(a, 2) ^ parseInt(b, 2));
+  return resultDec.toString(2).padStart(bitSize, '0');
 }

@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createMessageSchedule = exports.chunkString = exports.rightShiftWithLeadingZeros = exports.rightRotate = exports.preprocess = void 0;
-var to8BitString = function (word) {
+exports.xor = exports.createMessageSchedule = exports.chunkString = exports.rightShiftWithLeadingZeros = exports.rightRotate = exports.preprocess = void 0;
+var toBitString = function (word, bitSize) {
     var binaryString = '';
     Array.from(word).forEach(function (c) {
-        binaryString += c.charCodeAt(0).toString(2).padStart(8, '0');
+        binaryString += c.charCodeAt(0).toString(2).padStart(bitSize, '0');
     });
     return binaryString;
 };
@@ -12,7 +12,7 @@ var appendSingle1 = function (word) {
     return word + '1';
 };
 var preprocess = function (message) {
-    message = to8BitString(message);
+    message = toBitString(message, 8);
     var messageLength = message.length;
     message = appendSingle1(message);
     var zerosToAdd = 512 - ((messageLength + 1 + 64) % 512);
@@ -49,3 +49,9 @@ var createMessageSchedule = function (chunk) {
     return messageSchedule;
 };
 exports.createMessageSchedule = createMessageSchedule;
+var xor = function (a, b, bitSize) {
+    // tslint:disable-next-line: no-bitwise
+    var resultDec = (parseInt(a, 2) ^ parseInt(b, 2));
+    return resultDec.toString(2).padStart(bitSize, '0');
+};
+exports.xor = xor;
