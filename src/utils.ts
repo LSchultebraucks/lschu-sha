@@ -28,7 +28,7 @@ export const rightRotate = (word: string, d: number): string => {
   return leftRotate(word, word.length - d);
 };
 
-export const rightShiftWithLeadingZeros = (word: string, d: number): string => {
+export const rightShiftLogical = (word: string, d: number): string => {
   return '0'.repeat(d) + word.substring(0, word.length - d);
 };
 
@@ -53,7 +53,7 @@ export const createMessageSchedule = (chunk: string): string[] => {
 
 export const xor = (a: string, b: string, bitSize: number): string => {
   // tslint:disable-next-line: no-bitwise
-  const resultDec = parseInt(a, 2) ^ parseInt(b, 2);
+  const resultDec = (parseInt(a, 2) ^ parseInt(b, 2)) >>> 0;
   return resultDec.toString(2).padStart(bitSize, '0');
 };
 
@@ -64,7 +64,7 @@ export const add = (a: string, b: string, bitSize: number): string => {
 
 export const and = (a: string, b: string, bitSize: number): string => {
   // tslint:disable-next-line: no-bitwise
-  const resultDec = parseInt(a, 2) & parseInt(b, 2);
+  const resultDec = parseInt(a, 2) & (parseInt(b, 2) >>> 0);
   return resultDec.toString(2).padStart(bitSize, '0');
 };
 

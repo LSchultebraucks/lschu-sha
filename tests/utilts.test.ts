@@ -1,4 +1,4 @@
-import { chunkString, createMessageSchedule, preprocess, rightRotate, rightShiftWithLeadingZeros, xor, add, and, not } from '../src/utils';
+import { chunkString, createMessageSchedule, preprocess, rightRotate, rightShiftLogical, xor, add, and, not } from '../src/utils';
 
 test('preprocess - single chunk length word', () => {
     const message = 'hello world';
@@ -30,22 +30,40 @@ test('rightRotate - fullRotate', () => {
     expect(rightRotate(word, 8)).toEqual(expectedWord);
 });
 
-test('rightShift - singleShift', () => {
+test('rightRotate - 32bit word 17 rotations', () => {
+    const word = '00000000000000010101000110011011';
+    const expectedWord = '10101000110011011000000000000000'
+    expect(rightRotate(word, 17)).toEqual(expectedWord);
+});
+
+test('rightRotate - 32bit word 19 rotations', () => {
+    const word = '00000000000000010101000110011011';
+    const expectedWord = '00101010001100110110000000000000'
+    expect(rightRotate(word, 19)).toEqual(expectedWord);
+})
+
+test('rightShiftLogical - singleShift', () => {
     const word = '10010010';
     const expectedWord = '01001001';
-    expect(rightShiftWithLeadingZeros(word, 1)).toEqual(expectedWord);
+    expect(rightShiftLogical(word, 1)).toEqual(expectedWord);
 });
 
-test('rightShift - multipleShift', () => {
+test('rightShiftLogical - multipleShift', () => {
     const word = '10010010';
     const expectedWord = '00010010'; 
-    expect(rightShiftWithLeadingZeros(word, 3)).toEqual(expectedWord);
+    expect(rightShiftLogical(word, 3)).toEqual(expectedWord);
 });
 
-test('rightShift - fullShift', () => {
+test('rightShiftLogical - fullShift', () => {
     const word = '10010010';
     const expectedWord = '00000000';
-    expect(rightShiftWithLeadingZeros(word, 8)).toEqual(expectedWord);
+    expect(rightShiftLogical(word, 8)).toEqual(expectedWord);
+});
+
+test('rightShiftLogical - 32bit word 10 shift', () => {
+    const word = '00000000000000010101000110011011';
+    const expectedWord = '00000000000000000000000001010100'
+    expect(rightShiftLogical(word, 10)).toEqual(expectedWord);
 });
 
 test('chunkString - multiple chunks', () => {
@@ -189,6 +207,23 @@ test('xor - 6 bit and 8 bit words', () => {
     expect(xor(a, b, bizSize)).toEqual(expectedWord);
 });
 
+test('xor - multiple operations on 32bit words', () => {
+    const a = '10101000110011011000000000000000';
+    const b = '00101010001100110110000000000000';
+    const c = '00000000000000000000000001010100';
+    const bitSize = 32;
+    const expectedWord = '10000010111111101110000001010100';
+    expect(xor(xor(a, b, bitSize), c, bitSize));
+});
+
+test('xor - 32bit words', () => {
+    const a = '10101000110011011000000000000000';
+    const b = '00101010001100110110000000000000';
+    const bitSize = 32;
+    const expectedWord = '10000010111111101110000000000000';
+    expect(xor(a, b, bitSize)).toEqual(expectedWord);
+})
+
 test('add - 8 bit words', () => {
     const a = '01001000';
     const b = '01001000';
@@ -264,4 +299,17 @@ test('not - 8 bit word', () => {
     const bitSize = 8;
     const expectedWord = '00000000';
     expect(not(a, bitSize)).toEqual(expectedWord);
+});
+
+test('multiple operations xor, rotateRight, rotateShiftLogical 32bit words', () => {
+    const w = '00000000000000010101000110011011';
+    const expectedWord = '10000010111111101110000001010100';
+    const bitSize = 32;
+    const a = rightRotate(w, 17);
+    const b = rightRotate(w, 19);
+    const c = rightShiftLogical(w, 10);
+    const res1 = xor(a, b, bitSize);
+    const res2 = xor(res1, c, bitSize);
+    const s1 = xor(xor(a, b, bitSize), c, bitSize);
+    expect(res2).toEqual(expectedWord);
 });
