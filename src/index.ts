@@ -2,9 +2,9 @@ import {
   preprocess,
   chunkString,
   createMessageSchedule,
+  createInitialWords,
   rightRotate,
   xor,
-  rightShiftLogical,
   add,
   and,
   not,
@@ -43,20 +43,8 @@ export const sha256 = (message: string): string => {
   const preprocessedMessage = preprocess(message);
   const messageChunks = chunkString(preprocessedMessage, 512);
   messageChunks.forEach((chunk) => {
-    const wArr = createMessageSchedule(chunk);
-    for (let i = 16; i < 64; i++) {
-      const s0 = xor(
-        xor(rightRotate(wArr[i - 15], 7), rightRotate(wArr[i - 15], 18), bitSize),
-        rightShiftLogical(wArr[i - 15], 3),
-        bitSize,
-      );
-      const s1 = xor(
-        xor(rightRotate(wArr[i - 2], 17), rightRotate(wArr[i - 2], 19), bitSize),
-        rightShiftLogical(wArr[i - 2], 10),
-        bitSize,
-      );
-      wArr[i] = add(add(add(wArr[i - 16], s0, bitSize), wArr[i - 7], bitSize), s1, bitSize);
-    }
+    let wArr = createMessageSchedule(chunk);
+    wArr = createInitialWords(wArr, bitSize);
     let a = h0;
     let b = h1;
     let c = h2;
@@ -96,6 +84,6 @@ export const sha256 = (message: string): string => {
     h6 = add(h6, g, bitSize);
     h7 = add(h7, h, bitSize);
   });
-  const hash = h0 + h1 + h2 + h3 + h4 + h5 + h6 + h7;
+  const hash = h0.concat(h1).concat(h2).concat(h3).concat(h4).concat(h5).concat(h6).concat(h7);
   return hash;
 };

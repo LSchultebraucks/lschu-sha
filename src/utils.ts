@@ -51,6 +51,27 @@ export const createMessageSchedule = (chunk: string): string[] => {
   return messageSchedule;
 };
 
+export const createInitialWords = (wArr: string[], bitSize: number): string[] => {
+  for (let i = 16; i < wArr.length; i++) {
+    const s0 = xor(
+      xor(rightRotate(wArr[i - 15], 7), rightRotate(wArr[i - 15], 18), bitSize),
+      rightShiftLogical(wArr[i - 15], 3),
+      bitSize,
+    );
+    const s1 = xor(
+      xor(rightRotate(wArr[i - 2], 17), rightRotate(wArr[i - 2], 19), bitSize),
+      rightShiftLogical(wArr[i - 2], 10),
+      bitSize,
+    );
+    wArr[i] = add(add(add(wArr[i - 16], s0, bitSize), wArr[i - 7], bitSize), s1, bitSize);
+  };
+  return wArr;
+};
+
+export const hashRound = (hashVariables: string[], K: string[], wArr: string[]): string[] => {
+  return [];
+};
+
 export const xor = (a: string, b: string, bitSize: number): string => {
   // tslint:disable-next-line: no-bitwise
   const resultDec = (parseInt(a, 2) ^ parseInt(b, 2)) >>> 0;

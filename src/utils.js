@@ -6,7 +6,7 @@ exports.not =
   exports.xor =
   exports.createMessageSchedule =
   exports.chunkString =
-  exports.rightShiftWithLeadingZeros =
+  exports.rightShiftLogical =
   exports.rightRotate =
   exports.preprocess =
     void 0;
@@ -37,10 +37,10 @@ var rightRotate = function (word, d) {
   return leftRotate(word, word.length - d);
 };
 exports.rightRotate = rightRotate;
-var rightShiftWithLeadingZeros = function (word, d) {
+var rightShiftLogical = function (word, d) {
   return '0'.repeat(d) + word.substring(0, word.length - d);
 };
-exports.rightShiftWithLeadingZeros = rightShiftWithLeadingZeros;
+exports.rightShiftLogical = rightShiftLogical;
 var chunkString = function (str, chunkSize) {
   var numChunks = Math.ceil(str.length / chunkSize);
   var chunks = new Array(numChunks);
@@ -60,7 +60,7 @@ var createMessageSchedule = function (chunk) {
 exports.createMessageSchedule = createMessageSchedule;
 var xor = function (a, b, bitSize) {
   // tslint:disable-next-line: no-bitwise
-  var resultDec = parseInt(a, 2) ^ parseInt(b, 2);
+  var resultDec = (parseInt(a, 2) ^ parseInt(b, 2)) >>> 0;
   return resultDec.toString(2).padStart(bitSize, '0');
 };
 exports.xor = xor;
@@ -71,7 +71,7 @@ var add = function (a, b, bitSize) {
 exports.add = add;
 var and = function (a, b, bitSize) {
   // tslint:disable-next-line: no-bitwise
-  var resultDec = parseInt(a, 2) & parseInt(b, 2);
+  var resultDec = parseInt(a, 2) & (parseInt(b, 2) >>> 0);
   return resultDec.toString(2).padStart(bitSize, '0');
 };
 exports.and = and;

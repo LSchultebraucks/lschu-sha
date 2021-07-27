@@ -21,28 +21,28 @@ var K = [
   0xc67178f2,
 ];
 var sha256 = function (message) {
-  var h0 = INITIAL_H0.toString(16);
-  var h1 = INITIAL_H1.toString(16);
-  var h2 = INITIAL_H2.toString(16);
-  var h3 = INITIAL_H3.toString(16);
-  var h4 = INITIAL_H4.toString(16);
-  var h5 = INITIAL_H5.toString(16);
-  var h6 = INITIAL_H6.toString(16);
-  var h7 = INITIAL_H7.toString(16);
   var bitSize = 32;
+  var h0 = INITIAL_H0.toString(2).padStart(bitSize, '0');
+  var h1 = INITIAL_H1.toString(2).padStart(bitSize, '0');
+  var h2 = INITIAL_H2.toString(2).padStart(bitSize, '0');
+  var h3 = INITIAL_H3.toString(2).padStart(bitSize, '0');
+  var h4 = INITIAL_H4.toString(2).padStart(bitSize, '0');
+  var h5 = INITIAL_H5.toString(2).padStart(bitSize, '0');
+  var h6 = INITIAL_H6.toString(2).padStart(bitSize, '0');
+  var h7 = INITIAL_H7.toString(2).padStart(bitSize, '0');
   var preprocessedMessage = utils_1.preprocess(message);
   var messageChunks = utils_1.chunkString(preprocessedMessage, 512);
   messageChunks.forEach(function (chunk) {
     var wArr = utils_1.createMessageSchedule(chunk);
-    for (var i = 16; i < 64; i++) {
+    for (var i = 16; i < wArr.length; i++) {
       var s0 = utils_1.xor(
         utils_1.xor(utils_1.rightRotate(wArr[i - 15], 7), utils_1.rightRotate(wArr[i - 15], 18), bitSize),
-        utils_1.rightShiftWithLeadingZeros(wArr[i - 15], 3),
+        utils_1.rightShiftLogical(wArr[i - 15], 3),
         bitSize,
       );
       var s1 = utils_1.xor(
         utils_1.xor(utils_1.rightRotate(wArr[i - 2], 17), utils_1.rightRotate(wArr[i - 2], 19), bitSize),
-        utils_1.rightShiftWithLeadingZeros(wArr[i - 2], 10),
+        utils_1.rightShiftLogical(wArr[i - 2], 10),
         bitSize,
       );
       wArr[i] = utils_1.add(utils_1.add(utils_1.add(wArr[i - 16], s0, bitSize), wArr[i - 7], bitSize), s1, bitSize);
@@ -55,7 +55,7 @@ var sha256 = function (message) {
     var f = h5;
     var g = h6;
     var h = h7;
-    for (var i = 0; i < 64; i++) {
+    for (var i = 0; i < K.length; i++) {
       var S1 = utils_1.xor(
         utils_1.xor(utils_1.rightRotate(e, 6), utils_1.rightRotate(e, 11), bitSize),
         utils_1.rightRotate(e, 25),
@@ -63,7 +63,11 @@ var sha256 = function (message) {
       );
       var ch = utils_1.xor(utils_1.and(e, f, bitSize), utils_1.and(utils_1.not(e, bitSize), g, bitSize), bitSize);
       var temp1 = utils_1.add(
-        utils_1.add(utils_1.add(utils_1.add(K[i].toString(16), wArr[i], bitSize), ch, bitSize), S1, bitSize),
+        utils_1.add(
+          utils_1.add(utils_1.add(K[i].toString(2).padStart(bitSize, '0'), wArr[i], bitSize), ch, bitSize),
+          S1,
+          bitSize,
+        ),
         h,
         bitSize,
       );
@@ -96,7 +100,7 @@ var sha256 = function (message) {
     h6 = utils_1.add(h6, g, bitSize);
     h7 = utils_1.add(h7, h, bitSize);
   });
-  var hash = h0 + h1 + h2 + h3 + h4 + h5 + h6 + h7;
+  var hash = h0.concat(h1).concat(h2).concat(h3).concat(h4).concat(h5).concat(h6).concat(h7);
   return hash;
 };
 exports.sha256 = sha256;
