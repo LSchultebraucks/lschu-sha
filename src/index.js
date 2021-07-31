@@ -34,19 +34,7 @@ var sha256 = function (message) {
   var messageChunks = utils_1.chunkString(preprocessedMessage, 512);
   messageChunks.forEach(function (chunk) {
     var wArr = utils_1.createMessageSchedule(chunk);
-    for (var i = 16; i < wArr.length; i++) {
-      var s0 = utils_1.xor(
-        utils_1.xor(utils_1.rightRotate(wArr[i - 15], 7), utils_1.rightRotate(wArr[i - 15], 18), bitSize),
-        utils_1.rightShiftLogical(wArr[i - 15], 3),
-        bitSize,
-      );
-      var s1 = utils_1.xor(
-        utils_1.xor(utils_1.rightRotate(wArr[i - 2], 17), utils_1.rightRotate(wArr[i - 2], 19), bitSize),
-        utils_1.rightShiftLogical(wArr[i - 2], 10),
-        bitSize,
-      );
-      wArr[i] = utils_1.add(utils_1.add(utils_1.add(wArr[i - 16], s0, bitSize), wArr[i - 7], bitSize), s1, bitSize);
-    }
+    wArr = utils_1.createInitialWords(wArr, bitSize);
     var a = h0;
     var b = h1;
     var c = h2;
@@ -56,40 +44,20 @@ var sha256 = function (message) {
     var g = h6;
     var h = h7;
     for (var i = 0; i < K.length; i++) {
-      var S1 = utils_1.xor(
-        utils_1.xor(utils_1.rightRotate(e, 6), utils_1.rightRotate(e, 11), bitSize),
-        utils_1.rightRotate(e, 25),
+      var newHashes = utils_1.hashRound(
+        [a, b, c, d, e, f, g, h],
+        K[i].toString(2).padStart(bitSize, '0'),
+        wArr[i],
         bitSize,
       );
-      var ch = utils_1.xor(utils_1.and(e, f, bitSize), utils_1.and(utils_1.not(e, bitSize), g, bitSize), bitSize);
-      var temp1 = utils_1.add(
-        utils_1.add(
-          utils_1.add(utils_1.add(K[i].toString(2).padStart(bitSize, '0'), wArr[i], bitSize), ch, bitSize),
-          S1,
-          bitSize,
-        ),
-        h,
-        bitSize,
-      );
-      var S0 = utils_1.xor(
-        utils_1.xor(utils_1.rightRotate(a, 2), utils_1.rightRotate(a, 13), bitSize),
-        utils_1.rightRotate(a, 22),
-        bitSize,
-      );
-      var maj = utils_1.xor(
-        utils_1.xor(utils_1.and(a, b, bitSize), utils_1.and(a, c, bitSize), bitSize),
-        utils_1.and(b, c, bitSize),
-        bitSize,
-      );
-      var temp2 = utils_1.add(S0, maj, bitSize);
-      h = g;
-      g = f;
-      f = e;
-      e = utils_1.add(d, temp1, bitSize);
-      d = c;
-      c = b;
-      b = a;
-      a = utils_1.add(temp1, temp2, bitSize);
+      a = newHashes[0];
+      b = newHashes[1];
+      c = newHashes[2];
+      d = newHashes[3];
+      e = newHashes[4];
+      f = newHashes[5];
+      g = newHashes[6];
+      h = newHashes[7];
     }
     h0 = utils_1.add(h0, a, bitSize);
     h1 = utils_1.add(h1, b, bitSize);

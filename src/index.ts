@@ -8,6 +8,7 @@ import {
   add,
   and,
   not,
+  hashRound,
 } from '../src/utils';
 
 const INITIAL_H0 = 0x6a09e667;
@@ -54,27 +55,16 @@ export const sha256 = (message: string): string => {
     let g = h6;
     let h = h7;
     for (let i = 0; i < K.length; i++) {
-      const S1 = xor(xor(rightRotate(e, 6), rightRotate(e, 11), bitSize), rightRotate(e, 25), bitSize);
-      const ch = xor(and(e, f, bitSize), and(not(e, bitSize), g, bitSize), bitSize);
-      const temp1 = add(
-        add(add(add(K[i].toString(2).padStart(bitSize, '0'), wArr[i], bitSize), ch, bitSize), S1, bitSize),
-        h,
-        bitSize,
-      );
-      const S0 = xor(xor(rightRotate(a, 2), rightRotate(a, 13), bitSize), rightRotate(a, 22), bitSize);
-      const maj = xor(xor(and(a, b, bitSize), and(a, c, bitSize), bitSize), and(b, c, bitSize), bitSize);
-      const temp2 = add(S0, maj, bitSize);
-
-      h = g;
-      g = f;
-      f = e;
-      e = add(d, temp1, bitSize);
-      d = c;
-      c = b;
-      b = a;
-      a = add(temp1, temp2, bitSize);
+      const newHashes = hashRound([a, b, c, d, e, f, g, h], K[i].toString(2).padStart(bitSize, '0'), wArr[i], bitSize);
+      a = newHashes[0];
+      b = newHashes[1];
+      c = newHashes[2];
+      d = newHashes[3];
+      e = newHashes[4];
+      f = newHashes[5];
+      g = newHashes[6];
+      h = newHashes[7];
     }
-
     h0 = add(h0, a, bitSize);
     h1 = add(h1, b, bitSize);
     h2 = add(h2, c, bitSize);

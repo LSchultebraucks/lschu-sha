@@ -64,12 +64,35 @@ export const createInitialWords = (wArr: string[], bitSize: number): string[] =>
       bitSize,
     );
     wArr[i] = add(add(add(wArr[i - 16], s0, bitSize), wArr[i - 7], bitSize), s1, bitSize);
-  };
+  }
   return wArr;
 };
 
-export const hashRound = (hashVariables: string[], K: string[], wArr: string[]): string[] => {
-  return [];
+export const hashRound = (hashVariables: string[], k: string, w: string, bitSize = 32): string[] => {
+  let a = hashVariables[0];
+  let b = hashVariables[1];
+  let c = hashVariables[2];
+  let d = hashVariables[3];
+  let e = hashVariables[4];
+  let f = hashVariables[5];
+  let g = hashVariables[6];
+  let h = hashVariables[7];
+  const S1 = xor(xor(rightRotate(e, 6), rightRotate(e, 11), bitSize), rightRotate(e, 25), bitSize);
+  const ch = xor(and(e, f, bitSize), and(not(e, bitSize), g, bitSize), bitSize);
+  const temp1 = add(add(add(add(k, w, bitSize), ch, bitSize), S1, bitSize), h, bitSize);
+  const S0 = xor(xor(rightRotate(a, 2), rightRotate(a, 13), bitSize), rightRotate(a, 22), bitSize);
+  const maj = xor(xor(and(a, b, bitSize), and(a, c, bitSize), bitSize), and(b, c, bitSize), bitSize);
+  const temp2 = add(S0, maj, bitSize);
+
+  h = g;
+  g = f;
+  f = e;
+  e = add(d, temp1, bitSize);
+  d = c;
+  c = b;
+  b = a;
+  a = add(temp1, temp2, bitSize);
+  return [a, b, c, d, e, f, g, h];
 };
 
 export const xor = (a: string, b: string, bitSize: number): string => {
