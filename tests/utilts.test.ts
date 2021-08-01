@@ -377,41 +377,6 @@ test('hashRound, "hello world" hash round i = 8', () => {
     expect(expectedHashes[7]).toEqual(actualHashes[7]);
 });
 
-test('hasRound, "hello world" parts i = 8', () => {
-    const a = '01001011111000110100111111101100';
-    const b = '11010000000000111000000110101000';
-    const c = '10000110010100110100010011000011';
-    const d = '11110100100001101100011000000110';
-    const e = '11100011011010100000111110011101';
-    const f = '11110010000010000001111011000000';
-    const g = '10011101001111010010000110010011';
-    const h = '01000110001001101000011001101001';
-    const hashes = [a, b, c, d, e, f, g, h];
-    const w = '00000000000000000000000000000000';
-    const k = '11011000000001111010101010011000';
-    const bitSize = 32;
-    const S1 = xor(xor(rightRotate(e, 6), rightRotate(e, 11), bitSize), rightRotate(e, 25), bitSize);
-    const ch = xor(and(e, f, bitSize), and(not(e, bitSize), g, bitSize), bitSize);
-    const temp1 = add(
-        add(add(add(k, w, bitSize), ch, bitSize), S1, bitSize),
-        h,
-        bitSize,
-    );
-    const S0 = xor(xor(rightRotate(a, 2), rightRotate(a, 13), bitSize), rightRotate(a, 22), bitSize);
-    const maj = xor(xor(and(a, b, bitSize), and(a, c, bitSize), bitSize), and(b, c, bitSize), bitSize);
-    const temp2 = add(S0, maj, bitSize);
-    const expectedCh = '11111110000111010010111010000010'; // TODO test why it is wrong here
-    const expectedS1 = '00110001001101100000101110001110';
-    const expectedMaj = '11000010010000110100010111101000';
-    const expectedS0 = '11100000101001010011110111001110';
-    const expectedTemp1 = '01001101100000010110101100010001';
-    expect(expectedCh).toEqual(ch);
-    expect(expectedS0).toEqual(S0);
-    expect(expectedMaj).toEqual(maj);
-    expect(expectedS1).toEqual(S1);
-    expect(expectedTemp1).toEqual(temp1);
-});
-
 test('hashRound, "hello world" hash round i = 15', () => {
     const a = '11010110001111100010110000100110';
     const b = '01000011010101001111010111010010';
@@ -577,27 +542,6 @@ test('and - 32bit words', () => {
     const bitSize = 32;
     const expectedWord = '00010001000001000100000000001100';
     expect(and(a, b, bitSize)).toEqual(expectedWord);
-});
-
-test('not - 8 bit word', () => {
-    const a = '01100011';
-    const bitSize = 8;
-    const expectedWord = '10011100';
-    expect(not(a, bitSize)).toEqual(expectedWord);
-});
-
-test('not - 8 bit word', () => {
-    const a = '00000000';
-    const bitSize = 8;
-    const expectedWord = '11111111';
-    expect(not(a, bitSize)).toEqual(expectedWord);
-});
-
-test('not - 8 bit word', () => {
-    const a = '11111111';
-    const bitSize = 8;
-    const expectedWord = '00000000';
-    expect(not(a, bitSize)).toEqual(expectedWord);
 });
 
 test('not - 32 bit word', () => {

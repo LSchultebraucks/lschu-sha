@@ -108,14 +108,14 @@ export const add = (a: string, b: string, bitSize: number): string => {
 
 export const and = (a: string, b: string, bitSize: number): string => {
   // tslint:disable-next-line: no-bitwise
-  const resultDec = parseInt(a, 2) & (parseInt(b, 2) >>> 0);
+  const resultDec = (parseInt(a, 2) & parseInt(b, 2)) >>> 0;
   return resultDec.toString(2).padStart(bitSize, '0');
 };
 
 export const not = (a: string, bitSize: number): string => {
   // tslint:disable-next-line: no-bitwise
-  const resultDec = replaceAll(replaceAll(replaceAll(replaceAll(a, '1', 'b'), '0', 'a'), 'a', '1'), 'b', '0');
-  return resultDec.padStart(bitSize, '0');
+  const resultDec = ~parseInt(a, 2) >>> 0;
+  return resultDec.toString(2).padStart(bitSize, '0');
 };
 
 const replaceAll = (str: string, find: string, replace: string): string => {
