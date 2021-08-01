@@ -3,3 +3,7 @@
 ## Partial Implementation of SHA-Algorithms
 
 Check out [US Secure Hash Algorithms (SHA and HMAC-SHA)](https://datatracker.ietf.org/doc/html/rfc4634) for more information.
+
+## Implemented
+
+✔ SHA-256
