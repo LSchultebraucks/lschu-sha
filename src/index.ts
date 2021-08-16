@@ -3,11 +3,7 @@ import {
   chunkString,
   createMessageSchedule,
   createInitialWords,
-  rightRotate,
-  xor,
   add,
-  and,
-  not,
   hashRound,
 } from '../src/utils';
 
@@ -75,5 +71,5 @@ export const sha256 = (message: string): string => {
     h7 = add(h7, h, bitSize);
   });
   const hash = h0.concat(h1).concat(h2).concat(h3).concat(h4).concat(h5).concat(h6).concat(h7);
-  return hash;
+  return BigInt("0b" + hash).toString(16).toUpperCase();
 };
